@@ -5,18 +5,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 import org.controlsfx.dialog.Dialogs;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import library.DateUtil.DateUtil;
+import library.Util.CheckInternetConnection;
 import library.model.*;
 import library.Main;
 import javafx.scene.control.*;
-
-
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -132,7 +134,12 @@ public class BookOverviewController {
 			this.noteLabel.setText(book.getNote());
 			this.purchaseDateLabel.setText(DateUtil.format(book.getPurchaseDate()));
 			this.categoryLabel.setText(book.getCategory());
-            this.bookCover.setImage(loadImage(eliminateDashes(book.getISBN())));
+            try {
+				this.bookCover.setImage(loadImage(eliminateDashes(book.getISBN())));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             this.bookCover.setSmooth(true);
             this.bookCover.setCache(true);
 		}
@@ -161,20 +168,45 @@ public class BookOverviewController {
      * Get books Cover Page
      * @param isbn
      */
-    private Image loadImage(String isbn) {
-        String imgUrl = "http://covers.openlibrary.org/b/isbn/" + isbn + "-L.jpg";
-
+    private Image loadImage(String isbn) throws Exception {
+        //String imgUrl = "http://covers.openlibrary.org/b/isbn/" + isbn + "-L.jpg";
+    	String JSONString = retrieveJSON(isbn);
+    	String imgUrl = imageAddress(JSONString);
         Image img = new Image(imgUrl);
 
         return img;
+    }
+    
+    /**
+     * handle JSON data
+     * @param jsonString
+     */
+    private String imageAddress(String jsonString) throws Exception{
+    	if (jsonString == null) {
+    		return "file:Resources/images/no_book_cover.jpg";
+    	}
+    	String imageAddress = "file:Resources/images/no_book_cover.jpg";
+    	JSONObject jsonObject = new JSONObject(jsonString);
+    	JSONArray item = jsonObject.getJSONArray("items");
+    	try {
+    		for (int i = 0; i < item.length(); i++) {
+    			imageAddress = item.getJSONObject(0).getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail");
+    		}
+    	} catch(Exception e) {
+    		imageAddress = "file:Resources/images/no_book_cover.jpg";
+    	}
+    	return imageAddress;
     }
 
     /**
      * Retrieve JSON
      * @param isbn
      */
-    protected String retriveJSON(String isbn) throws Exception{
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn);
+    protected String retrieveJSON(String isbn) throws Exception{
+    	if (CheckInternetConnection.checkConnection() != true) {
+    		return null;
+    	}
+        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn + "&key=AIzaSyD0sKZb2tQ3vzWYO5d-poGqQHENyeSV5ws");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
 
@@ -190,6 +222,7 @@ public class BookOverviewController {
         }
         reader.close();
         connection.disconnect();
+        //System.out.println(sb.toString());
         return sb.toString();
     }
 	
@@ -223,7 +256,6 @@ public class BookOverviewController {
 			}
 		}
 		else {
-			editButton.setDisable(true);
 			Dialogs.create()
 					.title("No selection")
 					.masthead("No book selected")
