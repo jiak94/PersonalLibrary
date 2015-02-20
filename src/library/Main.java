@@ -39,8 +39,7 @@ public class Main extends Application {
 		
 		
 		//Set the application Icon
-		this.primaryStage.getIcons().add(new Image("file:resources/images/Library.png"));
-		
+		this.primaryStage.getIcons().add(new Image("file:Resources/images/Library.png"));
 		
 		initRootLayout();
 		showBookOverview();
@@ -232,10 +231,15 @@ public class Main extends Application {
 			setBookFilePath(file);
 			
 		} catch (Exception e) {
-			Dialogs.create()
-					.title("Error")
-					.masthead("Could not load data form file:\n" + file.getPath())
+			if (file.exists()) {
+				Dialogs.create()
+					.title("Info")
+					.masthead("Your library is currently empty\n" + file.getPath())
 					.showException(e);
+			}else {
+				getBookData().clear();
+				setBookFilePath(null);
+			}
 		}
 	}
 	
