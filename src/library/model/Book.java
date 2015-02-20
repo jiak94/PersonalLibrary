@@ -23,6 +23,9 @@ public class Book {
 	private final StringProperty publisher;
 	private final StringProperty ISBN;
 	private final DoubleProperty price;
+	private final StringProperty authors;
+	private final StringProperty mediumCoverLink;
+	private final StringProperty smallCoverLink;
 	private final StringProperty location;
 	private final StringProperty note;
 	private final StringProperty category;
@@ -56,8 +59,47 @@ public class Book {
 		this.price = new SimpleDoubleProperty(0.0);
 		this.location = new SimpleStringProperty("");
 		this.note = new SimpleStringProperty("");
+		this.authors = new SimpleStringProperty("");
+		this.mediumCoverLink = new SimpleStringProperty("");
+		this.smallCoverLink = new SimpleStringProperty("");
 		this.category = new SimpleStringProperty("-Select-");
 		this.purchaseDate = new SimpleObjectProperty<LocalDate>(DateUtil.convert(getTodayDate()));
+	}
+	
+	public String getAuthors() {
+		return authors.get();
+	}
+	
+	public void setAuthors(String authors) {
+		this.authors.set(authors);
+	}
+	
+	public StringProperty getAuthorsProperty() {
+		return authors;
+	}
+	
+	public String getMediumCoverLink() {
+		return mediumCoverLink.get();
+	}
+	
+	public void setMediumCoverLink(String link) {
+		this.mediumCoverLink.set(link);
+	}
+	
+	public StringProperty getMediumCoverLinkProperty() {
+		return mediumCoverLink;
+	}
+	
+	public String getSmallCoverLink() {
+		return smallCoverLink.get();
+	}
+	
+	public void setSmallCoverLink(String link) {
+		this.smallCoverLink.set(link);
+	}
+	
+	public StringProperty getSmallCoverLinkProperty() {
+		return smallCoverLink;
 	}
 	
 	public String getTitle() {
