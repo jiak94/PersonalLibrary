@@ -7,8 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import org.controlsfx.dialog.Dialogs;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,12 +18,6 @@ import library.model.*;
 import library.Main;
 import javafx.scene.control.*;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 
 public class BookOverviewController {
@@ -56,6 +48,8 @@ public class BookOverviewController {
 	private Label categoryLabel;
 	@FXML
 	private TextField searchField;
+	@FXML
+	private Label authors;
 	
 	private ObservableList<Book> bookData;
 	
@@ -116,8 +110,8 @@ public class BookOverviewController {
 	public void setMain(Main mainApp) {
 		this.main = mainApp;
 		
-		bookTable.setItems(main.getBookData());
 		this.bookData = main.getBookData();
+		bookTable.setItems(main.getBookData());
 	}
 	
 	/**
@@ -131,14 +125,23 @@ public class BookOverviewController {
 			this.publisherLabel.setText(book.getPublisher());
 			this.priceLabel.setText("$ "+book.getPrice());
 			this.locationLabel.setText(book.getLocation());
+			try{
+				this.authors.setText(book.getAuthors());
+			} catch(Exception e) {
+				this.authors.setText("No data");
+			}
 			this.noteLabel.setText(book.getNote());
 			this.purchaseDateLabel.setText(DateUtil.format(book.getPurchaseDate()));
 			this.categoryLabel.setText(book.getCategory());
             try {
-				this.bookCover.setImage(loadImage(eliminateDashes(book.getISBN())));
+            	if (CheckInternetConnection.checkConnection()) {
+            		this.bookCover.setImage(loadImage(book.getMediumCoverLink()));
+            	}
+            	else {
+            		this.bookCover.setImage(new Image("file:Resources/images/no_book_cover.jpg"));
+            	}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.bookCover.setImage(new Image("file:Resources/images/no_book_cover.jpg"));
 			}
             this.bookCover.setSmooth(true);
             this.bookCover.setCache(true);
@@ -157,73 +160,12 @@ public class BookOverviewController {
 	}
 
     /**
-     * eliminate dashes
-     * @param isbn
-     */
-    private String eliminateDashes(String isbn) {
-        return isbn.replaceAll("-", "");
-    }
-
-    /**
      * Get books Cover Page
      * @param isbn
      */
-    private Image loadImage(String isbn) throws Exception {
-        //String imgUrl = "http://covers.openlibrary.org/b/isbn/" + isbn + "-L.jpg";
-    	String JSONString = retrieveJSON(isbn);
-    	String imgUrl = imageAddress(JSONString);
-        Image img = new Image(imgUrl);
-
+    private Image loadImage(String url) throws Exception {
+        Image img = new Image(url);
         return img;
-    }
-    
-    /**
-     * handle JSON data
-     * @param jsonString
-     */
-    private String imageAddress(String jsonString) throws Exception{
-    	if (jsonString == null) {
-    		return "file:Resources/images/no_book_cover.jpg";
-    	}
-    	String imageAddress = "file:Resources/images/no_book_cover.jpg";
-    	JSONObject jsonObject = new JSONObject(jsonString);
-    	JSONArray item = jsonObject.getJSONArray("items");
-    	try {
-    		for (int i = 0; i < item.length(); i++) {
-    			imageAddress = item.getJSONObject(0).getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail");
-    		}
-    	} catch(Exception e) {
-    		imageAddress = "file:Resources/images/no_book_cover.jpg";
-    	}
-    	return imageAddress;
-    }
-
-    /**
-     * Retrieve JSON
-     * @param isbn
-     */
-    protected String retrieveJSON(String isbn) throws Exception{
-    	if (CheckInternetConnection.checkConnection() != true) {
-    		return null;
-    	}
-        URL url = new URL("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn + "&key=AIzaSyD0sKZb2tQ3vzWYO5d-poGqQHENyeSV5ws");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.connect();
-
-        InputStream inputStream = connection.getInputStream();
-
-        Reader reader = new InputStreamReader(inputStream, "UTF-8");
-        BufferedReader bufferedReader = new BufferedReader(reader);
-
-        String str;
-        StringBuffer sb = new StringBuffer();
-        while ((str = bufferedReader.readLine()) != null) {
-            sb.append(str);
-        }
-        reader.close();
-        connection.disconnect();
-        //System.out.println(sb.toString());
-        return sb.toString();
     }
 	
 	/**
@@ -233,6 +175,7 @@ public class BookOverviewController {
 		int selectedIndex = bookTable.getSelectionModel().getSelectedIndex();
 		if (selectedIndex >= 0) {
 			bookTable.getItems().remove(selectedIndex);
+			//bookTable.get(selectedIndex)
 		}
 		else {
 			Dialogs.create()
@@ -268,8 +211,8 @@ public class BookOverviewController {
 	 * Called when new button is clicked
 	 */
 	public void handleNewBook() {
-		Book tempBook = new Book();
-		boolean okClicked = main.showBookEditDialog(tempBook);
+		Book tempBook = new Book(null, null);
+		boolean okClicked = main.showNewBookDialog(tempBook);
 		
 		if (okClicked) {
 			main.getBookData().add(tempBook);
