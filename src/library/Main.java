@@ -95,7 +95,7 @@ public class Main extends Application {
 			
 			BookOverviewController controller = loader.getController();
 			controller.setMain(this);
-			controller.addFilter();
+			//controller.addFilter();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,6 +154,42 @@ public class Main extends Application {
 		}
 	}
 	
+	/**
+	 * Open the dialog when user click edit
+	 * @param book object
+	 * @return true if the user click OK
+	 */
+	public boolean showNewBookDialog(Book book) {
+		try {
+			// Load the fxml file and create a new stage for the popup dialog.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class
+					.getResource("view/NewBookDialog.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+
+			// Create the dialog Stage.
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("New Book");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			// Set the person into the DateUtil.
+			NewBookDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setBook(book);
+
+			// Show the dialog and wait until the user closes it
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 	/**
 	 * Open the statistic dialog
 	 */
