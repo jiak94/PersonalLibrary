@@ -10,6 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import library.DateUtil.DateUtil;
+import library.Util.GoogleBookInfo;
 import library.model.Book;
 
 
@@ -49,6 +50,31 @@ public class BookEditDialogController {
 		ObservableList<String> categories = FXCollections.observableArrayList("-Select-", "Text Book", "Fiction", "Arts & Photography", "Bussiness & Money", 
 				"Children's Book", "Computers & Technology", "Education & Teaching", "Reference", "Others");
 		category.setItems(categories);
+	}
+	
+	/**
+	 * Sync With google
+	 * @param book
+	 * @throws Exception 
+	 */
+	@FXML
+	public void syncWithGoogle() throws Exception {
+		GoogleBookInfo gBook = new GoogleBookInfo(book.getISBN());
+		
+		book.setTitle(gBook.getTitle());
+		book.setPublisher(gBook.getPublisher());
+		book.setPrice(Double.parseDouble(priceField.getText()));
+		book.setLocation(locationField.getText());
+		book.setPurchaseDate(DateUtil.convert(purchaseDateField.getText()));
+		book.setNote(noteArea.getText());
+		book.setCategory(category.getValue());
+		book.setMediumCoverLink(gBook.getMediumImage());
+		book.setSmallCoverLink(gBook.getSmallImage());
+		book.setAuthors(gBook.getAuthor());
+		
+		okClicked = true;
+		
+		dialogStage.close();
 	}
 	
 	/**
