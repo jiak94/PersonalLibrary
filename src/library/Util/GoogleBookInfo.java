@@ -13,8 +13,11 @@ import org.json.JSONObject;
 public class GoogleBookInfo {
 	private final static String apiKey = "AIzaSyD0sKZb2tQ3vzWYO5d-poGqQHENyeSV5ws";
 	private final static String requestUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
-	
-	public static String getJSONString(String isbn) throws Exception{
+	private static String isbn;
+	public GoogleBookInfo(String isbn) {
+		GoogleBookInfo.isbn = eliminateDashes(isbn);
+	}
+	public static String getJSONString() throws Exception{
 		URL url = new URL(requestUrl + isbn + "&key=" + apiKey);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
@@ -34,8 +37,8 @@ public class GoogleBookInfo {
         return sb.toString();
 	}
 	
-	public static String getMediumImage(String isbn) throws Exception {
-		String jsonString = getJSONString(isbn);
+	public String getMediumImage() throws Exception {
+		String jsonString = getJSONString();
 		if (jsonString == null) {
     		return "file:Resources/images/no_book_cover.jpg";
     	}
@@ -52,8 +55,8 @@ public class GoogleBookInfo {
     	return imageAddress;
 	}
 	
-	public static String getSmallImage(String isbn) throws Exception {
-		String jsonString = getJSONString(isbn);
+	public String getSmallImage() throws Exception {
+		String jsonString = getJSONString();
 		if (jsonString == null) {
     		return "file:Resources/images/no_book_cover.jpg";
     	}
@@ -70,8 +73,8 @@ public class GoogleBookInfo {
     	return imageAddress;
 	}
 	
-	public static String getPublisher(String isbn) throws Exception {
-		String jsonString = getJSONString(isbn);
+	public String getPublisher() throws Exception {
+		String jsonString = getJSONString();
 		if (jsonString == null) {
 			return "";
 		}
@@ -89,8 +92,8 @@ public class GoogleBookInfo {
 		return publisher;
 	}
 	
-	public static String getAuthor(String isbn) throws Exception {
-		String jsonString = getJSONString(isbn);
+	public String getAuthor() throws Exception {
+		String jsonString = getJSONString();
 			if(jsonString == null) {
 				return "";
 			}
@@ -101,9 +104,9 @@ public class GoogleBookInfo {
 			int length = item.length();
 			try {
 				for (int i = 0; i < length; i++) {
-					item = item.getJSONObject(i).getJSONObject("volumeInfo").getJSONArray("authors");
+					JSONArray authors = item.getJSONObject(i).getJSONObject("volumeInfo").getJSONArray("authors");
 					for (int j = 0; j < item.length(); j++) {
-						author += item.getString(i) + " ";
+						author += authors.getString(i) + " ";
 					}
 				}
 			} catch (Exception e) {
@@ -111,4 +114,32 @@ public class GoogleBookInfo {
 			}
 			return author;
 	}
+	
+	public String getTitle() throws Exception {
+		String jsonString = getJSONString();
+		if (jsonString == null) {
+			return "";
+		}
+		String title = "";
+		JSONObject obj = new JSONObject(jsonString);
+		JSONArray item = obj.getJSONArray("items");
+		int length = item.length();
+		try {
+			for (int i = 0; i < length; i++) {
+				title = item.getJSONObject(i).getJSONObject("volumeInfo").getString("title");
+			}
+		} catch (Exception e) {
+			title = "";
+		}
+		
+		return title;
+	}
+	
+	/**
+     * eliminate dashes
+     * @param isbn
+     */
+    private static String eliminateDashes(String isbn) {
+        return isbn.replaceAll("-", "");
+    }
 }
