@@ -27,10 +27,10 @@ public class RootLayoutController {
     }
     
     /**
-     * Creates an empty address book.
+     * Creates an empty library.
      */
     @FXML
-    private void handleNew() {
+    public void handleNew() {
         main.getBookData().clear();
         main.setBookFilePath(null);
     }
