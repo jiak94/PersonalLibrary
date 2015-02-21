@@ -29,7 +29,7 @@ public class Main extends Application {
 	private BorderPane rootLayout;
 	
 	
-	private ObservableList<Book> bookData = FXCollections.observableArrayList();
+	private static ObservableList<Book> bookData = FXCollections.observableArrayList();
 	
 	
 	@Override
@@ -102,10 +102,10 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * returen book data
+	 * return book data
 	 * @return bookData
 	 */
-	public ObservableList<Book> getBookData() {
+	public static ObservableList<Book> getBookData() {
 		return bookData;
 	}
 	

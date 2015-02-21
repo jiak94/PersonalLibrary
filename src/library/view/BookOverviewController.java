@@ -58,6 +58,7 @@ public class BookOverviewController {
 	
 	//default constructor
 	public BookOverviewController() {
+		this.bookData = Main.getBookData();
 	}
 	
 	/**
@@ -70,7 +71,7 @@ public class BookOverviewController {
 		
 		//Clear book details when it initializes
 		showBookDetails(null);
-		
+		addFilter();
 		//Listen for selection changes and show the details
 		bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newValue) -> showBookDetails(newValue));
 		
@@ -90,7 +91,7 @@ public class BookOverviewController {
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (book.getTitle().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-                    return true; // Filter matches first name.
+                    return true; // Filter matches book title.
                 }
                 return false; // Does not match.
             });
@@ -110,8 +111,9 @@ public class BookOverviewController {
 	public void setMain(Main mainApp) {
 		this.main = mainApp;
 		
-		this.bookData = main.getBookData();
-		bookTable.setItems(main.getBookData());
+		//this.bookData = main.getBookData();
+		//bookTable.setItems(main.getBookData());
+		//bookTable.setItems(this.bookData);
 	}
 	
 	/**
@@ -174,8 +176,9 @@ public class BookOverviewController {
 	public void handleDeleteBook() {
 		int selectedIndex = bookTable.getSelectionModel().getSelectedIndex();
 		if (selectedIndex >= 0) {
-			bookTable.getItems().remove(selectedIndex);
+			//bookTable.getItems().remove(selectedIndex);
 			//bookTable.get(selectedIndex)
+			bookData.remove(selectedIndex);
 		}
 		else {
 			Dialogs.create()
