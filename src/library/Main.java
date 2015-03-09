@@ -95,7 +95,11 @@ public class Main extends Application {
 			
 			BookOverviewController controller = loader.getController();
 			controller.setMain(this);
+<<<<<<< HEAD
 			controller.addFilter();
+=======
+			//controller.addFilter();
+>>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -105,7 +109,11 @@ public class Main extends Application {
 	 * return book data
 	 * @return bookData
 	 */
+<<<<<<< HEAD
 	public ObservableList<Book> getBookData() {
+=======
+	public static ObservableList<Book> getBookData() {
+>>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 		return bookData;
 	}
 	
