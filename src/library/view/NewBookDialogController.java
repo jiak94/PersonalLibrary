@@ -5,14 +5,9 @@ import org.controlsfx.dialog.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-<<<<<<< HEAD
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-=======
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextArea;
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import library.DateUtil.DateUtil;
@@ -27,7 +22,6 @@ public class NewBookDialogController {
 	@FXML
     private ChoiceBox<String> category;
     @FXML
-<<<<<<< HEAD
     private TextField locationField;
     @FXML
     private TextField purchaseDateField;
@@ -47,14 +41,7 @@ public class NewBookDialogController {
     private Button dataButton;
     
 	private int manuallyData = 0;
-=======
-    private TextArea noteArea;
-    @FXML
-    private TextField locationField;
-    @FXML
-    private TextField purchaseDateField;
-	
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
+
 	private Stage dialogStage;
 	private Book book;
 	private boolean okClicked = false;
@@ -85,7 +72,6 @@ public class NewBookDialogController {
 	 * @throws Exception 
 	 */
 	@FXML
-<<<<<<< HEAD
 	public void handleOk() {
 		try {
 			if (isInputValid()) {
@@ -133,30 +119,8 @@ public class NewBookDialogController {
 		}
 		else {
 			retrieveFromGoogle();
-=======
-	public void handleOk() throws Exception {
-		if (isInputValid()) {
-			String isbn = ISBNField.getText();
-			gBook = new GoogleBookInfo(isbn);
-			book.setTitle(gBook.getTitle());
-			book.setISBN(isbn);
-			book.setPublisher(gBook.getPublisher());
-			book.setPrice(Double.parseDouble(priceField.getText()));
-			book.setLocation(locationField.getText());
-			book.setPurchaseDate(DateUtil.convert(purchaseDateField.getText()));
-			book.setNote(noteArea.getText());
-			book.setCategory(category.getValue());
-			book.setMediumCoverLink(gBook.getMediumImage());
-			book.setSmallCoverLink(gBook.getSmallImage());
-			book.setAuthors(gBook.getAuthor());
-			
-			okClicked = true;
-			
-			dialogStage.close();
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 		}
 	}
-	
 	/**
 <<<<<<< HEAD
 	 * Manually enter data
@@ -249,9 +213,5 @@ public class NewBookDialogController {
 		purchaseDateField.setText(DateUtil.format(book.getPurchaseDate()));
 		purchaseDateField.setPromptText("mm/dd/yyyy");
 		category.setValue(book.getCategory());
-<<<<<<< HEAD
-=======
-		noteArea.setText(book.getNote());
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 	}
 }

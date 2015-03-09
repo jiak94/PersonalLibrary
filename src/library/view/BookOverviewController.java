@@ -41,22 +41,15 @@ public class BookOverviewController {
 	@FXML
 	private Label publisherLabel;
 	@FXML
-<<<<<<< HEAD
-=======
-	private Label noteLabel;
-	@FXML
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 	private Button editButton;
 	@FXML
 	private Label categoryLabel;
 	@FXML
 	private TextField searchField;
 	@FXML
-<<<<<<< HEAD
+
 	private Label authorLabel;
-=======
-	private Label authors;
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
+
 	
 	private ObservableList<Book> bookData;
 	
@@ -65,10 +58,7 @@ public class BookOverviewController {
 	
 	//default constructor
 	public BookOverviewController() {
-<<<<<<< HEAD
-=======
-		this.bookData = Main.getBookData();
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
+
 	}
 	
 	/**
@@ -81,10 +71,7 @@ public class BookOverviewController {
 		
 		//Clear book details when it initializes
 		showBookDetails(null);
-<<<<<<< HEAD
-=======
-		addFilter();
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
+
 		//Listen for selection changes and show the details
 		bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newValue) -> showBookDetails(newValue));
 		
@@ -124,14 +111,10 @@ public class BookOverviewController {
 	public void setMain(Main mainApp) {
 		this.main = mainApp;
 		
-<<<<<<< HEAD
+
 		this.bookData = main.getBookData();
 		bookTable.setItems(this.bookData);
-=======
-		//this.bookData = main.getBookData();
-		//bookTable.setItems(main.getBookData());
-		//bookTable.setItems(this.bookData);
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
+
 	}
 	
 	/**
@@ -146,18 +129,10 @@ public class BookOverviewController {
 			this.priceLabel.setText("$ "+book.getPrice());
 			this.locationLabel.setText(book.getLocation());
 			try{
-<<<<<<< HEAD
 				this.authorLabel.setText(book.getAuthors());
 			} catch(Exception e) {
 				this.authorLabel.setText("No data");
 			}
-=======
-				this.authors.setText(book.getAuthors());
-			} catch(Exception e) {
-				this.authors.setText("No data");
-			}
-			this.noteLabel.setText(book.getNote());
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 			this.purchaseDateLabel.setText(DateUtil.format(book.getPurchaseDate()));
 			this.categoryLabel.setText(book.getCategory());
             try {
@@ -180,15 +155,10 @@ public class BookOverviewController {
 			this.priceLabel.setText("");
 			this.publisherLabel.setText("");
 			this.locationLabel.setText("");
-<<<<<<< HEAD
+
 			this.purchaseDateLabel.setText("");
 			this.categoryLabel.setText("");
 			this.authorLabel.setText("");
-=======
-			this.noteLabel.setText("");
-			this.purchaseDateLabel.setText("");
-			this.categoryLabel.setText("");
->>>>>>> 0740888cead9bed77a61d66c25354533f42e2284
 		}
 	}
 
