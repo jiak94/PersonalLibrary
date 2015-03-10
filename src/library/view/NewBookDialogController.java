@@ -91,7 +91,7 @@ public class NewBookDialogController {
 				book.setISBN(isbn);
 				book.setPrice(Double.parseDouble(priceField.getText()));
 				book.setLocation(locationField.getText());
-				book.setPurchaseDate(DateUtil.convert(purchaseDateField.getText()));
+				book.setPurchaseDate(DateUtil.convert(purchaseDateField .getText()));
 				book.setCategory(category.getValue());
 				
 				okClicked = true;
